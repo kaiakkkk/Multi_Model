@@ -17,6 +17,12 @@ import logging
 import random
 import shutil
 from pathlib import Path
+
+# 添加项目根目录到系统路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, "../.."))
+sys.path.insert(0, project_root)
+
 from ultralytics import YOLO
 import torch.nn as nn
 import torchvision.transforms as transforms
