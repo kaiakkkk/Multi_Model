@@ -15,6 +15,10 @@ runs/
 **/logs/
 *.log
 
+# 演示图像
+demo_images/*
+!demo_images/.gitkeep
+
 # 模型文件
 models/*.pt
 models/*.pth

@@ -13,6 +13,11 @@ import logging
 import subprocess
 import time
 
+# 添加项目根目录到系统路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, "../.."))
+sys.path.insert(0, project_root)
+
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -61,14 +66,14 @@ def demo_test_yolo():
     logger.info("=== YOLO测试演示 ===")
     
     # 测试YOLO模型
-    run_command("python utils/test_tools/test_yolo.py", "YOLO测试")
+    run_command("python detect.py --source demo_images/test.jpg --save-txt --save-conf", "YOLO测试")
 
 def demo_test_cascade():
     """演示级联系统测试"""
     logger.info("=== 级联系统测试演示 ===")
     
-    # 测试轻量化级联系统
-    run_command("python utils/test_tools/test_cascade_simple_light.py", "轻量级级联测试")
+    # 测试级联系统
+    run_command("python detect.py --source demo_images/test.jpg --cascade --save-txt --save-conf", "级联系统测试")
 
 def demo_detection():
     """演示缺陷检测"""
@@ -76,10 +81,23 @@ def demo_detection():
     
     # 获取测试图像
     test_img = None
-    test_dir = "results_light/yolo_test/test_images"
+    test_dir = "demo_images"
     
-    if os.path.exists(test_dir):
-        test_files = [f for f in os.listdir(test_dir) if f.endswith(".jpg")]
+    if not os.path.exists(test_dir):
+        os.makedirs(test_dir, exist_ok=True)
+        # 如果没有演示图像，复制一些样例图像
+        sample_dir = "data/welding_defects/yolov8/test/images"
+        if os.path.exists(sample_dir):
+            import random
+            import shutil
+            sample_files = [f for f in os.listdir(sample_dir) if f.endswith((".jpg", ".jpeg", ".png"))]
+            if sample_files:
+                sample_file = random.choice(sample_files)
+                shutil.copy(os.path.join(sample_dir, sample_file), os.path.join(test_dir, "test.jpg"))
+                test_img = os.path.join(test_dir, "test.jpg")
+                logger.info(f"已准备演示图像: {test_img}")
+    else:
+        test_files = [f for f in os.listdir(test_dir) if f.endswith((".jpg", ".jpeg", ".png"))]
         if test_files:
             test_img = os.path.join(test_dir, test_files[0])
     
@@ -92,6 +110,17 @@ def demo_detection():
     
     # 可视化结果
     run_command(f"python visualize.py --image {test_img}", "结果可视化")
+
+# 测试功能
+def test_yolo():
+    """YOLO模型测试"""
+    logger.info("=== 执行YOLO模型测试 ===")
+    return demo_test_yolo()
+
+def test_cascade():
+    """级联系统测试"""
+    logger.info("=== 执行级联系统测试 ===")
+    return demo_test_cascade()
 
 def main():
     """主函数"""

@@ -86,7 +86,7 @@ def main():
             return convert_main()
         elif args.data_command == "check":
             from data_tools.check_dataset import main as check_main
-            sys.argv = [sys.argv[0]]
+            sys.argv = [sys.argv[0], "--script-path=utils/data_tools/check_dataset.py"]
             return check_main()
             
     # 处理模型命令
@@ -130,12 +130,12 @@ def main():
     # 处理测试命令
     elif args.command == "test":
         if args.test_command == "yolo":
-            from test_tools.test_yolo import main as test_yolo_main
-            sys.argv = [sys.argv[0]]
+            from utils.demo_tools.run_demo import test_yolo as test_yolo_main
+            sys.argv = [sys.argv[0], "--yolo"]
             return test_yolo_main()
         elif args.test_command == "cascade":
-            from test_tools.test_cascade_simple_light import main as test_cascade_main
-            sys.argv = [sys.argv[0]]
+            from utils.demo_tools.run_demo import test_cascade as test_cascade_main
+            sys.argv = [sys.argv[0], "--cascade"]
             return test_cascade_main()
             
     # 处理演示命令
