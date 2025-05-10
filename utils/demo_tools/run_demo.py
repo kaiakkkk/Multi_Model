@@ -49,26 +49,26 @@ def demo_data_conversion():
     
     # 运行数据转换
     run_command(
-        "python convert_dataset.py --yolo-dir data/welding_defects/yolov8 --output-dir data/welding_defects/cnn",
+        "python utils/data_tools/convert_dataset.py --yolo-dir data/welding_defects/yolov8 --output-dir data/welding_defects/cnn",
         "数据转换"
     )
     
     # 检查数据集
-    run_command("python check_dataset.py", "数据集检查")
+    run_command("python utils/data_tools/check_dataset.py", "数据集检查")
 
 def demo_test_yolo():
     """演示YOLO测试"""
     logger.info("=== YOLO测试演示 ===")
     
     # 测试YOLO模型
-    run_command("python test_yolo.py", "YOLO测试")
+    run_command("python utils/test_tools/test_yolo.py", "YOLO测试")
 
 def demo_test_cascade():
     """演示级联系统测试"""
     logger.info("=== 级联系统测试演示 ===")
     
     # 测试轻量化级联系统
-    run_command("python test_cascade_simple_light.py", "轻量级级联测试")
+    run_command("python utils/test_tools/test_cascade_simple_light.py", "轻量级级联测试")
 
 def demo_detection():
     """演示缺陷检测"""
