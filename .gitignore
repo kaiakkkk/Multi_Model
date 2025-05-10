@@ -1,5 +1,6 @@
 # 数据集和大型文件
 data/
+!data/**/.gitkeep
 *.pt
 *.pth
 *.onnx
@@ -8,6 +9,7 @@ data/
 
 # 运行结果
 results/
+!results/**/.gitkeep
 results_light/
 runs/
 **/logs/
@@ -18,6 +20,7 @@ models/*.pt
 models/*.pth
 models/checkpoint/
 models/weights/
+!models/.gitkeep
 
 # Python缓存文件
 __pycache__/
