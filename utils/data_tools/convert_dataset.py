@@ -7,9 +7,13 @@
 """
 
 import os
+import sys
 import argparse
-from utils.convert_yolo_to_cnn import read_yaml_config, create_cnn_dataset, move_yolo_files
 import logging
+
+# 添加上级目录到路径
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from convert_yolo_to_cnn import read_yaml_config, create_cnn_dataset, move_yolo_files
 
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -19,10 +23,10 @@ def parse_args():
     """解析命令行参数"""
     parser = argparse.ArgumentParser(description='YOLO多边形标注转换为CNN数据集')
     
-    parser.add_argument('--yolo-path', type=str, default='data/welding_defects/yolov8',
+    parser.add_argument('--yolo-dir', '--yolo-path', type=str, default='data/welding_defects/yolov8',
                         help='YOLO数据集路径 (默认: data/welding_defects/yolov8)')
     
-    parser.add_argument('--output-path', type=str, default='data/welding_defects/cnn',
+    parser.add_argument('--output-dir', '--output-path', type=str, default='data/welding_defects/cnn',
                         help='CNN数据集输出路径 (默认: data/welding_defects/cnn)')
     
     parser.add_argument('--split-yolo', action='store_true',
@@ -46,13 +50,17 @@ def main():
     """主函数"""
     args = parse_args()
     
+    # 兼容新旧参数名
+    yolo_path = args.yolo_dir if hasattr(args, 'yolo_dir') else args.yolo_path
+    output_path = args.output_dir if hasattr(args, 'output_dir') else args.output_path
+    
     # 检查YOLO数据集路径
-    if not os.path.exists(args.yolo_path):
-        logger.error(f"YOLO数据集路径不存在: {args.yolo_path}")
+    if not os.path.exists(yolo_path):
+        logger.error(f"YOLO数据集路径不存在: {yolo_path}")
         return
     
     # 检查YAML配置文件
-    yaml_path = os.path.join(args.yolo_path, 'data.yaml')
+    yaml_path = os.path.join(yolo_path, 'data.yaml')
     if not os.path.exists(yaml_path):
         logger.error(f"YAML配置文件不存在: {yaml_path}")
         return
@@ -67,13 +75,13 @@ def main():
     logger.info(f"类别名称: {class_names}")
     
     # 创建输出目录
-    os.makedirs(args.output_path, exist_ok=True)
+    os.makedirs(output_path, exist_ok=True)
     
     # 如果需要分割YOLO数据集
     if args.split_yolo:
         logger.info("正在分割YOLO数据集...")
         move_yolo_files(
-            args.yolo_path,
+            yolo_path,
             train_ratio=args.train_ratio,
             val_ratio=args.val_ratio,
             test_ratio=args.test_ratio
@@ -82,18 +90,18 @@ def main():
     # 创建CNN数据集
     logger.info("正在创建CNN数据集...")
     create_cnn_dataset(
-        args.yolo_path,
-        args.output_path,
+        yolo_path,
+        output_path,
         class_names,
         split_data=True
     )
     
-    logger.info(f"CNN数据集已创建: {args.output_path}")
+    logger.info(f"CNN数据集已创建: {output_path}")
     
     # 打印类别统计信息
-    if os.path.exists(args.output_path):
+    if os.path.exists(output_path):
         for split in ['train', 'val', 'test']:
-            split_dir = os.path.join(args.output_path, split)
+            split_dir = os.path.join(output_path, split)
             if os.path.exists(split_dir):
                 logger.info(f"{split}集目录统计:")
                 for class_name in class_names:
