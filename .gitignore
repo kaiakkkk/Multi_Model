@@ -1,0 +1,45 @@
+# 数据集和大型文件
+data/
+*.pt
+*.pth
+*.onnx
+*.weights
+*.h5
+
+# 运行结果
+results/
+results_light/
+runs/
+**/logs/
+*.log
+
+# 模型文件
+models/*.pt
+models/*.pth
+models/checkpoint/
+models/weights/
+
+# Python缓存文件
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# 系统文件
+.DS_Store
+.vscode/
+.idea/
+
+# 虚拟环境
+venv/
+env/
+.env/
+.conda/
+
+# 其他
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.bak 
