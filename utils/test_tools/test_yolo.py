@@ -241,8 +241,8 @@ def main():
             logger.info(f"下载YOLOv8n预训练模型...")
             # 这里使用YOLO直接下载预训练模型
             model = YOLO("yolov8n.pt")
-            # 保存模型
-            model.export(format="pt")
+            # 保存模型 - 不需要导出，直接使用
+            # model.export(format="pt")  # pt不是有效的导出格式
             shutil.copy("yolov8n.pt", model_path)
             logger.info(f"模型已保存: {model_path}")
         else:
